@@ -2,7 +2,7 @@ package codeutilsShared
 
 // Structure of Project configuration
 type ProjectConfig struct {
-	ProjectName  string
+	Name         string
 	ContentTypes []string
 	Go           GoCompilerOptions         // Go key maps to GoCompilerOptions struct
 	HTML         HTMLCompilerOptions       // HTML maps to HTMLCompilerOptions struct
