@@ -4,15 +4,18 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 // InputDialog
 // Fetch input after message
 func InputMessage(message string) string {
-	fmt.Print(message + ": ")                // Print without new line
-	stdinReader := bufio.NewReader(os.Stdin) // Create a new buffer IO reader that reads stdinReader
-	input, _ := stdinReader.ReadString('\n') // Read anything before a new line
-	return input                             // Return the input
+	fmt.Print(message + ": ")                    // Print without new line
+	stdinReader := bufio.NewReader(os.Stdin)     // Create a new buffer IO reader that reads stdinReader
+	input, _ := stdinReader.ReadString('\n')     // Read anything before a new line
+	input = strings.Replace(input, "\n", "", -1) // Remove any new lines
+
+	return input // Return the input
 }
 
 // OutputStatus
