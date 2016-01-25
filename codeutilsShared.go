@@ -6,9 +6,11 @@ import (
 	"os"
 )
 
+var GlobalFileMode os.FileMode    // Define GlobalFileMode as a file mode we'll use for "global" operations such as when doing IO as root
 var UniversalFileMode os.FileMode // Define universalFileMode as a file mode we'll wherever we can
 
 func init() {
+	GlobalFileMode = 0777    // Set to global read/write/executable
 	UniversalFileMode = 0744 // Only read/write/executable by owner, readable by group and others
 }
 
