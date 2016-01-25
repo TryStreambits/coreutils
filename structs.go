@@ -31,14 +31,14 @@ type GoBranchOptions struct {
 
 // Options available for compiling the entire LESS source tree
 type LESSCompilerOptions struct {
-	CompileFromRoot bool                         // Defaults to true, compiles everything in root into binary
-	Branches        map[string]LESSBranchOptions // Maps each string to a LESSBranchOptions struct
+	Branches map[string]LESSBranchOptions // Maps each string to a LESSBranchOptions struct
 }
 
 // Options available for compiling individual branches in the LESS source tree
 type LESSBranchOptions struct {
 	AdditionalCompileOptions []string // Additional compile options to pass to lessc
 	FileName                 string   // Name of the file of the outputted CSS
+	SourcesToInclude         []string // Sources to include, you can be very selective here
 	UniqueHash               bool     // Define UniqueHash as a bool, determines whether we should append a fragment of the hash of the file to the file name
 	UseGlob                  bool
 }
