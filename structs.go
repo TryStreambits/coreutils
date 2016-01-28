@@ -7,7 +7,7 @@ type ProjectConfig struct {
 	Go           GoCompilerOptions         // Go key maps to GoCompilerOptions struct
 	LESS         LESSCompilerOptions       // LESS key maps to LessCompilerOptions struct
 	TypeScript   TypeScriptCompilerOptions // TypeScript maps to TypeScriptCompilerOptions struct
-	UsesTests    string
+	UsesTests    bool
 }
 
 // #region Go
