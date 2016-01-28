@@ -51,7 +51,6 @@ type LESSBranchOptions struct {
 type TypeScriptCompilerOptions struct {
 	LibreJSLicense    string // Define LibreJSLicense as the valid Spdx license that is also valid with LibreJS Gopher / LibreJS
 	MinifyContent     bool   // Defaults to true, compiles using Google closure compiler
-	OutputDeclaration bool   // Defaults to false, like a normal bool type
 	Target            string // Defaults to ES5 - ES3 and ES6 should be options via TS
 	UniqueHash        bool   // Define UniqueHash as a bool, determines whether we should append a fragment of the hash of the file to the file name
 	UseLibreJSHeader  bool   // Define LibreJSHeader, adds compliant headers to JS code
