@@ -1,0 +1,1 @@
+{"Name":"codeutilsShared","ContentTypes":["go"],"Go":{"CompileFromRoot":true,"Branches":{"pkg":{"BinaryName":"","DoInstall":true,"SourcesToInclude":["*.go"]}}},"LESS":{"Branches":null},"TypeScript":{"LibreJSLicense":"","MinifyContent":false,"Target":"","UniqueHash":false,"UseLibreJSHeader":false},"UsesTests":false}
