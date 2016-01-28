@@ -75,8 +75,8 @@ func FindClosestFile(file string) (string, error) {
 	var closestFile string
 	var closestFileError error
 
-	directory := filepath.Dir(file) // Get the directory of the file
-	file = filepath.Base(file)      // Change file to only being the base (file name and extension)
+	directory := filepath.Dir(file) + "/" // Get the directory of the file
+	file = filepath.Base(file)            // Change file to only being the base (file name and extension)
 
 	if _, fileReadError := ioutil.ReadFile(directory + file); fileReadError != nil { // If there was a read error for the file
 		fileNoCaps := strings.ToLower(file)                            // Set fileNoCaps to the file name with no caps
@@ -89,7 +89,8 @@ func FindClosestFile(file string) (string, error) {
 			_, fileAttemptReadError := ioutil.ReadFile(directory + fileAttemptName) // Attempt to read this file
 
 			if fileAttemptReadError == nil { // If we successfully found a match
-				closestFile = directory + fileAttemptName // Set closest file to this attempt name
+				closestFile = fileAttemptName // Set closest file to this attempt name
+				break
 			}
 		}
 
@@ -97,10 +98,10 @@ func FindClosestFile(file string) (string, error) {
 			closestFileError = errors.New("No match for " + directory + file + " found.")
 		}
 	} else { // If there was no read error for the file, meaning the closest file is the file itself
-		closestFile = directory + file // Set to original file provided
+		closestFile = file // Set to original file provided
 	}
 
-	return closestFile, closestFileError
+	return directory + closestFile, closestFileError
 }
 
 // IsDir
