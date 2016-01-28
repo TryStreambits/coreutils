@@ -76,14 +76,14 @@ func FindClosestFile(file string) (string, error) {
 	var closestFileError error
 
 	directory := filepath.Dir(file) // Get the directory of the file
-	file = filepath.Base(file) // Change file to only being the base (file name and extension)
+	file = filepath.Base(file)      // Change file to only being the base (file name and extension)
 
 	if _, fileReadError := ioutil.ReadFile(directory + file); fileReadError != nil { // If there was a read error for the file
-		fileNoCaps := strings.ToLower(file) // Set fileNoCaps to the file name with no caps
-		fileNoHyphen := strings.Replace(file, "-", "", -1) // Set fileNoHyphen to the file name with no -
+		fileNoCaps := strings.ToLower(file)                            // Set fileNoCaps to the file name with no caps
+		fileNoHyphen := strings.Replace(file, "-", "", -1)             // Set fileNoHyphen to the file name with no -
 		fileNoCapsNoHyphen := strings.Replace(fileNoCaps, "-", "", -1) // Set fileNoCapsNoHyphen to file name with no caps or -
 
-		fileClosestAttempts := []string{ fileNoCaps, fileNoHyphen, fileNoCapsNoHyphen } // Set fileClosestAttempts to an array of the closest attempts strings
+		fileClosestAttempts := []string{fileNoCaps, fileNoHyphen, fileNoCapsNoHyphen} // Set fileClosestAttempts to an array of the closest attempts strings
 
 		for _, fileAttemptName := range fileClosestAttempts {
 			_, fileAttemptReadError := ioutil.ReadFile(directory + fileAttemptName) // Attempt to read this file
