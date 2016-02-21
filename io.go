@@ -118,7 +118,7 @@ func GetFiles(directoryName string) ([]string, error) {
 		if directoryReadError == nil { // If there was no issue reading the directory contents
 			for _, fileInfoStruct := range directoryContents { // For each FileInfo struct in directoryContents
 				if !fileInfoStruct.IsDir() { // If the FileInfo indicates the object is not a directory
-					files = append(files, fileInfoStruct.Name()) // Add to files the file's name
+					files = append(files, directoryName+"/"+fileInfoStruct.Name()) // Add to files the file's name
 				}
 			}
 		} else { // If there was ano issue reading the directory content
