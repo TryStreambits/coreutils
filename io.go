@@ -8,8 +8,7 @@ import (
 	"strings"
 )
 
-// CopyDirectory
-// This function will copy a directory, sub-directories, and files
+// CopyDirectory will copy a directory, sub-directories, and files
 func CopyDirectory(sourceDirectory, destinationDirectory string) error {
 	var copyError error
 
@@ -42,8 +41,7 @@ func CopyDirectory(sourceDirectory, destinationDirectory string) error {
 	return copyError
 }
 
-// CopyFile
-// This function will copy a file and its relevant permissions
+// CopyFile will copy a file and its relevant permissions
 func CopyFile(sourceFile, destinationFile string) error {
 	var copyError error
 
@@ -68,8 +66,7 @@ func CopyFile(sourceFile, destinationFile string) error {
 	return copyError
 }
 
-// FindClosestFile
-// This function will return the closest related file to the one provided from a specific path
+// FindClosestFile will return the closest related file to the one provided from a specific path
 // Returns: string (Closest file) or error (such as if path doesn't exist)
 func FindClosestFile(file string) (string, error) {
 	var closestFile string
@@ -104,8 +101,7 @@ func FindClosestFile(file string) (string, error) {
 	return directory + closestFile, closestFileError
 }
 
-// GetFiles
-// This function will get all the files from a directory.
+// GetFiles will get all the files from a directory.
 func GetFiles(directoryName string) ([]string, error) {
 	var files []string      // Define files as a []string
 	var getFilesError error // Define getFilesError as an error
@@ -131,8 +127,7 @@ func GetFiles(directoryName string) ([]string, error) {
 	return files, getFilesError
 }
 
-// GetFilesContains
-// This function will return any files from a directory containing a particular string
+// GetFilesContains will return any files from a directory containing a particular string
 func GetFilesContains(directoryName, substring string) ([]string, error) {
 	var files []string                // Define files as the parsed files
 	var getFilesError error           // Define getFilesError as an error
@@ -151,8 +146,7 @@ func GetFilesContains(directoryName, substring string) ([]string, error) {
 	return files, getFilesError
 }
 
-// IsDir
-// Checks if the string provided is a directory or not (based on the current working directory)
+// IsDir checks if the string provided is a directory or not (based on the current working directory)
 func IsDir(path string) bool {
 	var isDir bool
 	currentWorkingDirectory, _ := os.Getwd()
@@ -169,8 +163,7 @@ func IsDir(path string) bool {
 	return isDir
 }
 
-// WriteOrUpdateFile
-// Function to write or update the file contents of the passed file under the leading filepath with the specified sourceFileMode
+// WriteOrUpdateFile writes or updates the file contents of the passed file under the leading filepath with the specified sourceFileMode
 func WriteOrUpdateFile(file string, fileContent []byte, sourceFileMode os.FileMode) error {
 	destinationFileDirectories := filepath.Dir(file) // Get the directories leading up to the destinationFileDirectories
 

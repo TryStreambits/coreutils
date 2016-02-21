@@ -1,6 +1,6 @@
 package codeutilsShared
 
-// Structure of Project configuration
+// ProjectConfig is the configuration for a Project
 type ProjectConfig struct {
 	Name         string
 	ContentTypes []string
@@ -12,13 +12,13 @@ type ProjectConfig struct {
 
 // #region Go
 
-// Options available for compiling the entire Go source tree
+// GoCompilerOptions are options available for compiling the entire Go source tree
 type GoCompilerOptions struct {
 	CompileFromRoot bool                       // Defaults to true, compiles everything in root into binary
 	Branches        map[string]GoBranchOptions // Maps each string to a GoBranchOptions struct
 }
 
-// Options available for compiling individual branches in the Go source tree
+// GoBranchOptions are options available for compiling individual branches in the Go source tree
 type GoBranchOptions struct {
 	BinaryName       string   // Name of the binary to output (will default to project name)
 	DoInstall        bool     // Set DoInstall as a bool (BinaryName will be ignored) Implies this branch is a go package.
@@ -29,12 +29,12 @@ type GoBranchOptions struct {
 
 // #region LESS
 
-// Options available for compiling the entire LESS source tree
+// LESSCompilerOptions are options available for compiling the entire LESS source tree
 type LESSCompilerOptions struct {
 	Branches map[string]LESSBranchOptions // Maps each string to a LESSBranchOptions struct
 }
 
-// Options available for compiling individual branches in the LESS source tree
+// LESSBranchOptions are options available for compiling individual branches in the LESS source tree
 type LESSBranchOptions struct {
 	AdditionalCompileOptions []string // Additional compile options to pass to lessc
 	FileName                 string   // Name of the file of the outputted CSS
@@ -47,7 +47,7 @@ type LESSBranchOptions struct {
 
 // #region TypeScript
 
-// Options available for compiling TypeScript
+// TypeScriptCompilerOptions are options available for compiling TypeScript
 type TypeScriptCompilerOptions struct {
 	LibreJSLicense   string // Define LibreJSLicense as the valid Spdx license that is also valid with LibreJS Gopher / LibreJS
 	MinifyContent    bool   // Defaults to true, compiles using Google closure compiler

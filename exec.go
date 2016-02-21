@@ -6,8 +6,7 @@ import (
 	"strings"
 )
 
-// ExecCommand
-// Function for executing a utility with args and returning the stringified output
+// ExecCommand executes a utility with args and returning the stringified output
 func ExecCommand(utility string, args []string, liveOutput bool) string {
 	var output []byte
 	runner := exec.Command(utility, args...)
@@ -23,8 +22,7 @@ func ExecCommand(utility string, args []string, liveOutput bool) string {
 	return string(output[:])
 }
 
-// ExecutableExists
-// Function for checking if an executable exists
+// ExecutableExists checks if an executable exists
 func ExecutableExists(executableName string) bool {
 	executableExists := true // Default to true
 

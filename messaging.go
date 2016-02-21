@@ -7,8 +7,7 @@ import (
 	"strings"
 )
 
-// InputDialog
-// Fetch input after message
+// InputMessage fetches input after message
 func InputMessage(message string) string {
 	fmt.Print(message + ": ")                    // Print without new line
 	stdinReader := bufio.NewReader(os.Stdin)     // Create a new buffer IO reader that reads stdinReader
@@ -18,8 +17,7 @@ func InputMessage(message string) string {
 	return input // Return the input
 }
 
-// OutputStatus
-// Outputs a "check" or not check based on true / false status, along with the message
+// OutputStatus outputs a "check" or not check based on true / false status, along with the message
 func OutputStatus(status bool, message string) {
 	statusChar := "✕ "
 
