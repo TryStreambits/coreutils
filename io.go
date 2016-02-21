@@ -142,7 +142,7 @@ func GetFilesContains(directoryName, substring string) ([]string, error) {
 
 	if getFilesError == nil { // If there was no issue getting the directory contents
 		for _, fileName := range allDirectoryContents { // For each file name in directory contents
-			if strings.Contains(fileName, substring) { // If the file name contains our substring
+			if strings.Contains(filepath.Base(fileName), substring) { // If the file name contains our substring
 				files = append(files, fileName) // Append to files
 			}
 		}
