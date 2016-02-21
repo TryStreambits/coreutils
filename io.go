@@ -104,6 +104,53 @@ func FindClosestFile(file string) (string, error) {
 	return directory + closestFile, closestFileError
 }
 
+// GetFiles
+// This function will get all the files from a directory.
+func GetFiles(directoryName string) ([]string, error) {
+	var files []string      // Define files as a []string
+	var getFilesError error // Define getFilesError as an error
+
+	if IsDir(directoryName) { // If directoryName is a directory
+		var directory *os.File
+		directory, _ = os.Open(directoryName)
+		directoryContents, directoryReadError := directory.Readdir(-1)
+
+		if directoryReadError == nil { // If there was no issue reading the directory contents
+			for _, fileInfoStruct := range directoryContents { // For each FileInfo struct in directoryContents
+				if !fileInfoStruct.IsDir() { // If the FileInfo indicates the object is not a directory
+					files = append(files, fileInfoStruct.Name()) // Add to files the file's name
+				}
+			}
+		} else { // If there was ano issue reading the directory content
+			getFilesError = errors.New("Cannot read the contents of " + directoryName)
+		}
+	} else { // If directoryName is not a directory
+		getFilesError = errors.New(directoryName + " is not a directory.")
+	}
+
+	return files, getFilesError
+}
+
+// GetFilesContains
+// This function will return any files from a directory containing a particular string
+func GetFilesContains(directoryName, substring string) ([]string, error) {
+	var files []string                // Define files as the parsed files
+	var getFilesError error           // Define getFilesError as an error
+	var allDirectoryContents []string // Define allDirectoryContents as the contents returned (if any) from GetFiles
+
+	allDirectoryContents, getFilesError = GetFiles(directoryName) // Get all the files from the directoryName
+
+	if getFilesError == nil { // If there was no issue getting the directory contents
+		for _, fileName := range allDirectoryContents { // For each file name in directory contents
+			if strings.Contains(fileName, substring) { // If the file name contains our substring
+				files = append(files, fileName) // Append to files
+			}
+		}
+	}
+
+	return files, getFilesError
+}
+
 // IsDir
 // Checks if the string provided is a directory or not (based on the current working directory)
 func IsDir(path string) bool {
