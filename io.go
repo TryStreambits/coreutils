@@ -53,10 +53,11 @@ func CopyFile(sourceFile, destinationFile string) error {
 		if sourceFileStats.IsDir() { // If this is actually a directory
 			copyError = errors.New(sourceFile + " is a directory. Please use CopyDirectory instead.")
 		} else { // If it is indeed a file
+			var fileContent []byte
 			sourceFileMode := sourceFileStats.Mode() // Get the FileMode of this file
 			sourceFileStruct.Close()                 // Close the file
 
-			fileContent, _ := ioutil.ReadFile(sourceFile) // Read the source file
+			fileContent, copyError = ioutil.ReadFile(sourceFile) // Read the source file
 			copyError = WriteOrUpdateFile(destinationFile, fileContent, sourceFileMode)
 		}
 	} else { // If the file does not exist
