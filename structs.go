@@ -5,6 +5,7 @@ type ProjectConfig struct {
 	Name         string
 	ContentTypes []string
 	Go           GoCompilerOptions         // Go key maps to GoCompilerOptions struct
+	HTML         HTMLCompilerOptions       // HTML key maps to HTMLCompilerOptions struct
 	LESS         LESSCompilerOptions       // LESS key maps to LessCompilerOptions struct
 	TypeScript   TypeScriptCompilerOptions // TypeScript maps to TypeScriptCompilerOptions struct
 	UsesTests    bool
@@ -23,6 +24,15 @@ type GoBranchOptions struct {
 	BinaryName       string   // Name of the binary to output (will default to project name)
 	DoInstall        bool     // Set DoInstall as a bool (BinaryName will be ignored) Implies this branch is a go package.
 	SourcesToInclude []string // Sources to include, you can be very selective here
+}
+
+// #endregion
+
+// #region HTML
+
+// HTMLCompilerOptions are options provided when compiling the HTML content
+type HTMLCompilerOptions struct {
+	EnableFrala bool // Defaults to false, enables Frala file parsing
 }
 
 // #endregion
