@@ -24,14 +24,7 @@ func ExecCommand(utility string, args []string, liveOutput bool) string {
 
 // ExecutableExists checks if an executable exists
 func ExecutableExists(executableName string) bool {
-	executableExists := true // Default to true
-
 	var emptyFlags []string
-	executableCommandMessage := ExecCommand(executableName, emptyFlags, false) // Generate an empty call to the executable
-
-	if strings.Contains(executableCommandMessage, "executable file not found") { // If executable does not exist
-		executableExists = false
-	}
-
-	return executableExists
+	executableCommandMessage := ExecCommand("which " + executableName, emptyFlags, false) // Generate an empty call to the executable
+	return strings.Contains(executableCommandMessage, executableName + " not found") // If executable does not exist
 }
