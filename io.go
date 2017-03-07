@@ -166,6 +166,7 @@ func IsDir(path string) bool {
 
 // WriteOrUpdateFile writes or updates the file contents of the passed file under the leading filepath with the specified sourceFileMode
 func WriteOrUpdateFile(file string, fileContent []byte, sourceFileMode os.FileMode) error {
+	var writeOrUpdateErr error
 	destinationFileDirectories := filepath.Dir(file) // Get the directories leading up to the destinationFileDirectories
 
 	if sourceFileMode == 0777 { // If things are global rwe
@@ -173,8 +174,12 @@ func WriteOrUpdateFile(file string, fileContent []byte, sourceFileMode os.FileMo
 	}
 
 	if destinationFileDirectories != "." { // If this is not the same directory as working dir
-		os.MkdirAll(destinationFileDirectories, sourceFileMode) // Make all the necessary directories
+		writeOrUpdateErr = os.MkdirAll(destinationFileDirectories, sourceFileMode) // Make all the necessary directories
 	}
 
-	return ioutil.WriteFile(file, fileContent, sourceFileMode) // Write the file content
+	if writeOrUpdateErr == nil { // If there was no issue creating the directory
+		writeOrUpdateErr = ioutil.WriteFile(file, fileContent, sourceFileMode) // Write the file content
+	}
+
+	return writeOrUpdateErr
 }
