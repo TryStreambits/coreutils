@@ -3,7 +3,6 @@ package codeutilsShared
 import (
 	"os"
 	"os/exec"
-	"strings"
 )
 
 // ExecCommand executes a utility with args and returning the stringified output
@@ -24,7 +23,6 @@ func ExecCommand(utility string, args []string, liveOutput bool) string {
 
 // ExecutableExists checks if an executable exists
 func ExecutableExists(executableName string) bool {
-	var emptyFlags []string
-	executableCommandMessage := ExecCommand("which "+executableName, emptyFlags, false) // Generate an empty call to the executable
-	return !strings.Contains(executableCommandMessage, executableName+" not found")     // If executable does not exist
+	_, existsErr := exec.LookPath(executableName)
+	return (existsErr == nil)
 }
