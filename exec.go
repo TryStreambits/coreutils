@@ -5,20 +5,24 @@ import (
 	"os/exec"
 )
 
-// ExecCommand executes a utility with args and returning the stringified output
-func ExecCommand(utility string, args []string, liveOutput bool) string {
-	var output []byte
-	runner := exec.Command(utility, args...)
+// ExecCommand executes a command with args and returning the stringified output
+func ExecCommand(command string, args []string, liveOutput bool) string {
+	if ExecutableExists(command) { // If the executable exists
+		var output []byte
+		runner := exec.Command(command, args...)
 
-	if liveOutput { // If we should immediately output the results of the command
-		runner.Stdout = os.Stdout
-		runner.Stderr = os.Stderr
-		runner.Start()
-	} else { // If we should redirect output to var
-		output, _ = runner.CombinedOutput() // Combine the output of stderr and stdout
+		if liveOutput { // If we should immediately output the results of the command
+			runner.Stdout = os.Stdout
+			runner.Stderr = os.Stderr
+			runner.Start()
+		} else { // If we should redirect output to var
+			output, _ = runner.CombinedOutput() // Combine the output of stderr and stdout
+		}
+
+		return string(output[:])
+	} else { // If the executable doesn't exist
+		return command + " is not an executable."
 	}
-
-	return string(output[:])
 }
 
 // ExecutableExists checks if an executable exists
