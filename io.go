@@ -1,12 +1,30 @@
-package codeutilsShared
+package coreutils
 
 import (
 	"errors"
 	"io/ioutil"
 	"os"
+	"os/user"
 	"path/filepath"
 	"strings"
 )
+
+// AbsDir get the absolute directory path, cleaning out any file names, home directory references, etc.
+func AbsDir(path string) string {
+	user, userGetErr := user.Current()
+
+	if userGetErr == nil { // If we didn't fail getting the current user
+		path = strings.Replace(path, "~", user.HomeDir+Separator, -1) // Replace any home directory reference
+	}
+
+	path, _ = filepath.Abs(path) // Get the absolute path of path
+
+	if !IsDir(path) { // If this is not a directory
+		path = filepath.Dir(path) // Strip out the last element
+	}
+
+	return path
+}
 
 // CopyDirectory will copy a directory, sub-directories, and files
 func CopyDirectory(sourceDirectory, destinationDirectory string) error {
@@ -68,7 +86,6 @@ func CopyFile(sourceFile, destinationFile string) error {
 }
 
 // FindClosestFile will return the closest related file to the one provided from a specific path
-// Returns: string (Closest file) or error (such as if path doesn't exist)
 func FindClosestFile(file string) (string, error) {
 	var closestFile string
 	var closestFileError error
@@ -103,38 +120,38 @@ func FindClosestFile(file string) (string, error) {
 }
 
 // GetFiles will get all the files from a directory.
-func GetFiles(directoryName string) ([]string, error) {
+func GetFiles(path string) ([]string, error) {
 	var files []string      // Define files as a []string
 	var getFilesError error // Define getFilesError as an error
 
-	if IsDir(directoryName) { // If directoryName is a directory
+	if IsDir(path) { // If path is a directory
 		var directory *os.File
-		directory, _ = os.Open(directoryName)
+		directory, _ = os.Open(path)
 		directoryContents, directoryReadError := directory.Readdir(-1)
 
 		if directoryReadError == nil { // If there was no issue reading the directory contents
 			for _, fileInfoStruct := range directoryContents { // For each FileInfo struct in directoryContents
 				if !fileInfoStruct.IsDir() { // If the FileInfo indicates the object is not a directory
-					files = append(files, directoryName+"/"+fileInfoStruct.Name()) // Add to files the file's name
+					files = append(files, path+"/"+fileInfoStruct.Name()) // Add to files the file's name
 				}
 			}
 		} else { // If there was ano issue reading the directory content
-			getFilesError = errors.New("Cannot read the contents of " + directoryName)
+			getFilesError = errors.New("Cannot read the contents of " + path)
 		}
-	} else { // If directoryName is not a directory
-		getFilesError = errors.New(directoryName + " is not a directory.")
+	} else { // If path is not a directory
+		getFilesError = errors.New(path + " is not a directory.")
 	}
 
 	return files, getFilesError
 }
 
 // GetFilesContains will return any files from a directory containing a particular string
-func GetFilesContains(directoryName, substring string) ([]string, error) {
+func GetFilesContains(path, substring string) ([]string, error) {
 	var files []string                // Define files as the parsed files
 	var getFilesError error           // Define getFilesError as an error
 	var allDirectoryContents []string // Define allDirectoryContents as the contents returned (if any) from GetFiles
 
-	allDirectoryContents, getFilesError = GetFiles(directoryName) // Get all the files from the directoryName
+	allDirectoryContents, getFilesError = GetFiles(path) // Get all the files from the path
 
 	if getFilesError == nil { // If there was no issue getting the directory contents
 		for _, fileName := range allDirectoryContents { // For each file name in directory contents
@@ -147,17 +164,16 @@ func GetFilesContains(directoryName, substring string) ([]string, error) {
 	return files, getFilesError
 }
 
-// IsDir checks if the string provided is a directory or not (based on the current working directory)
+// IsDir checks if the path provided is a directory or not
 func IsDir(path string) bool {
 	var isDir bool
-	currentWorkingDirectory, _ := os.Getwd()
-	fileObject, fileOpenError := os.Open(currentWorkingDirectory + "/" + path) // Open currentDirectory + path
+	fileObject, fileOpenError := os.Open(path) // Open currentDirectory + path
 
 	if fileOpenError == nil { // If there was no error opening the file object
-		fileStatistics, filePathError := fileObject.Stat() // Get any stats
+		stat, filePathError := fileObject.Stat() // Get any stats
 
 		if filePathError == nil { // If we got the statistics properly
-			isDir = fileStatistics.IsDir() // Set isDir to result from fileStatistics
+			isDir = stat.IsDir() // Set isDir to result from stat
 		}
 	}
 

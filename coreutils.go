@@ -1,19 +1,24 @@
-package codeutilsShared
+package coreutils
 
 import (
 	"crypto/sha512"
 	"encoding/hex"
 	"os"
+	"strconv"
 )
 
 // GlobalFileMode as a file mode we'll use for "global" operations such as when doing IO as root
 var GlobalFileMode os.FileMode
 
+// Separator is the file system path separator
+var Separator string
+
 // UniversalFileMode as a file mode we'll wherever we can
 var UniversalFileMode os.FileMode
 
 func init() {
-	GlobalFileMode = 0777    // Set to global read/write/executable
+	GlobalFileMode = 0777 // Set to global read/write/executable
+	Separator = strconv.QuoteRune(os.PathSeparator)
 	UniversalFileMode = 0744 // Only read/write/executable by owner, readable by group and others
 }
 

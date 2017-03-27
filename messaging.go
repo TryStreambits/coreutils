@@ -1,4 +1,4 @@
-package codeutilsShared
+package coreutils
 
 import (
 	"bufio"
