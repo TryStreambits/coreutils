@@ -1,6 +1,6 @@
 # coreutils
 
-This is a Go package containing useful functions used throughout our Go-based software.
+A package of common utilities for command execution, input, and IO.
 
 ## License
 
