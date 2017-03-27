@@ -41,7 +41,7 @@ func CopyDirectory(sourceDirectory, destinationDirectory string) error {
 	var copyError error
 
 	if IsDir(sourceDirectory) { // If sourceDirectory is a valid directory
-		os.MkdirAll(destinationDirectory, UniversalFileMode)                     // Make all the needed directories to destinationDirectory
+		os.MkdirAll(destinationDirectory, NonGlobalFileMode)                     // Make all the needed directories to destinationDirectory
 		sourceDirectoryFile, _ := os.Open(sourceDirectory)                       // Get the source directory "file" struct
 		directoryContents, directoryReadError := sourceDirectoryFile.Readdir(-1) // Read the directory contents
 
@@ -199,7 +199,7 @@ func WriteOrUpdateFile(file string, fileContent []byte, sourceFileMode os.FileMo
 	fileName := filepath.Base(file)
 
 	if sourceFileMode == 0777 { // If things are global rwe
-		sourceFileMode = UniversalFileMode // No, I can't let you do that Dave. (Changes to 744)
+		sourceFileMode = NonGlobalFileMode // No, I can't let you do that Dave. (Changes to 744)
 	}
 
 	if currentDirectory != writeDirectory { // If the currentDirectory is not the same directory as the writeDirectory

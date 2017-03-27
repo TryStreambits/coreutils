@@ -19,8 +19,7 @@ import "github.com/StroblIndustries/coreutils"
 ```go
 var GlobalFileMode os.FileMode
 ```
-GlobalFileMode as a file mode we'll use for "global" operations such as when
-doing IO as root
+GlobalFileMode is a file mode we'll use for global IO operations.
 
 ```go
 var Separator string
@@ -28,9 +27,9 @@ var Separator string
 Separator is the file system path separator
 
 ```go
-var UniversalFileMode os.FileMode
+var NonGlobalFileMode os.FileMode
 ```
-UniversalFileMode as a file mode we'll wherever we can
+NonGlobalFileMode is the file mode we'll use for non-global IO operations.
 
 ### Functions
 
