@@ -19,8 +19,12 @@ func AbsDir(path string) string {
 
 	path, _ = filepath.Abs(path) // Get the absolute path of path
 
-	if !IsDir(path) { // If this is not a directory
-		path = filepath.Dir(path) // Strip out the last element
+	if file, openErr := os.Open(path); openErr == nil { // Attempt to open the path, to validate if it is a file or directory
+		stat, statErr := file.Stat()
+
+		if (statErr == nil) && stat.IsDir() { // If this is a directory
+			path = filepath.Dir(path) // Strip out the last element
+		}
 	}
 
 	return path
@@ -183,7 +187,7 @@ func IsDir(path string) bool {
 // WriteOrUpdateFile writes or updates the file contents of the passed file under the leading filepath with the specified sourceFileMode
 func WriteOrUpdateFile(file string, fileContent []byte, sourceFileMode os.FileMode) error {
 	var writeOrUpdateErr error
-	destinationFileDirectories := filepath.Dir(file) // Get the directories leading up to the destinationFileDirectories
+	destinationFileDirectories := AbsDir(file)
 
 	if sourceFileMode == 0777 { // If things are global rwe
 		sourceFileMode = UniversalFileMode // No, I can't let you do that Dave. (Changes to 744)
