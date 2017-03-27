@@ -34,7 +34,7 @@ UniversalFileMode as a file mode we'll wherever we can
 
 ### Functions
 
-#### func  AbsDir
+#### func  AbsPath
 
 ```go
 func AbsPath(path string) string
