@@ -192,15 +192,11 @@ func IsDir(path string) bool {
 
 // WriteOrUpdateFile writes or updates the file contents of the passed file under the leading filepath with the specified sourceFileMode
 func WriteOrUpdateFile(file string, fileContent []byte, sourceFileMode os.FileMode) error {
-	currentDirectory, _ := os.Getwd() // Get the working directory
+	currentDirectory, _ := os.Getwd()            // Get the working directory
 	currentDirectory = AbsPath(currentDirectory) // Get the absolute path of the current working directory
 
 	writeDirectory := AbsPath(file)
 	fileName := filepath.Base(file)
-
-	if sourceFileMode == 0777 { // If things are global rwe
-		sourceFileMode = NonGlobalFileMode // No, I can't let you do that Dave. (Changes to 744)
-	}
 
 	if currentDirectory != writeDirectory { // If the currentDirectory is not the same directory as the writeDirectory
 		if createDirsErr := os.MkdirAll(writeDirectory, sourceFileMode); createDirsErr != nil { // If we failed to make all the directories needed
@@ -208,7 +204,7 @@ func WriteOrUpdateFile(file string, fileContent []byte, sourceFileMode os.FileMo
 		}
 	}
 
-	writeErr := ioutil.WriteFile(writeDirectory + fileName, fileContent, sourceFileMode)
+	writeErr := ioutil.WriteFile(writeDirectory+fileName, fileContent, sourceFileMode)
 
 	if writeErr != nil {
 		writeErr = errors.New("Failed to write " + fileName + " in directory " + writeDirectory)
