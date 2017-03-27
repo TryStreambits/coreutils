@@ -37,9 +37,9 @@ UniversalFileMode as a file mode we'll wherever we can
 #### func  AbsDir
 
 ```go
-func AbsDir(path string) string
+func AbsPath(path string) string
 ```
-AbsDir get the absolute directory path, cleaning out any file names, home
+AbsPath get the absolute directory path, cleaning out any file names, home
 directory references, etc.
 
 #### func  CopyDirectory

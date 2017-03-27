@@ -9,8 +9,8 @@ import (
 	"strings"
 )
 
-// AbsDir get the absolute directory path, cleaning out any file names, home directory references, etc.
-func AbsDir(path string) string {
+// AbsPath get the absolute directory path, cleaning out any file names, home directory references, etc.
+func AbsPath(path string) string {
 	user, userGetErr := user.Current()
 
 	if userGetErr == nil { // If we didn't fail getting the current user
@@ -193,7 +193,7 @@ func IsDir(path string) bool {
 // WriteOrUpdateFile writes or updates the file contents of the passed file under the leading filepath with the specified sourceFileMode
 func WriteOrUpdateFile(file string, fileContent []byte, sourceFileMode os.FileMode) error {
 	var writeOrUpdateErr error
-	destinationFileDirectories := AbsDir(file)
+	destinationFileDirectories := AbsPath(file)
 
 	if sourceFileMode == 0777 { // If things are global rwe
 		sourceFileMode = UniversalFileMode // No, I can't let you do that Dave. (Changes to 744)
