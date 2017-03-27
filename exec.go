@@ -6,17 +6,17 @@ import (
 )
 
 // ExecCommand executes a command with args and returning the stringified output
-func ExecCommand(command string, args []string, liveOutput bool) string {
+func ExecCommand(command string, args []string, redirect bool) string {
 	if ExecutableExists(command) { // If the executable exists
 		var output []byte
 		runner := exec.Command(command, args...)
 
-		if liveOutput { // If we should immediately output the results of the command
+		if redirect { // If we should redirect output to var
+			output, _ = runner.CombinedOutput() // Combine the output of stderr and stdout
+		} else {
 			runner.Stdout = os.Stdout
 			runner.Stderr = os.Stderr
 			runner.Start()
-		} else { // If we should redirect output to var
-			output, _ = runner.CombinedOutput() // Combine the output of stderr and stdout
 		}
 
 		return string(output[:])
