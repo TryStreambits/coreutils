@@ -19,12 +19,18 @@ func AbsDir(path string) string {
 
 	path, _ = filepath.Abs(path) // Get the absolute path of path
 
+	var stripLastElement bool
+
 	if file, openErr := os.Open(path); openErr == nil { // Attempt to open the path, to validate if it is a file or directory
 		stat, statErr := file.Stat()
+		stripLastElement = (statErr == nil) && !stat.IsDir() // Sets stripLastElement to true if stat.IsDir is not true
+	} else { // If we failed to open the directory or file
+		lastElement := filepath.Base(path)
+		stripLastElement = filepath.Ext(lastElement) != "" // If lastElement is either a dotfile or has an extension, assume it is a file
+	}
 
-		if (statErr == nil) && stat.IsDir() { // If this is a directory
-			path = filepath.Dir(path) // Strip out the last element
-		}
+	if stripLastElement {
+		path = filepath.Dir(path) + Separator // Strip out the last element and add the separator
 	}
 
 	return path
