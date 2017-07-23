@@ -95,54 +95,23 @@ func CopyFile(sourceFile, destinationFile string) error {
 	return copyError
 }
 
-// FindClosestFile will return the closest related file to the one provided from a specific path
-func FindClosestFile(file string) (string, error) {
-	var closestFile string
-	var closestFileError error
-
-	directory := filepath.Dir(file) + "/" // Get the directory of the file
-	file = filepath.Base(file)            // Change file to only being the base (file name and extension)
-
-	if _, fileReadError := ioutil.ReadFile(directory + file); fileReadError != nil { // If there was a read error for the file
-		fileNoCaps := strings.ToLower(file)                            // Set fileNoCaps to the file name with no caps
-		fileNoHyphen := strings.Replace(file, "-", "", -1)             // Set fileNoHyphen to the file name with no -
-		fileNoCapsNoHyphen := strings.Replace(fileNoCaps, "-", "", -1) // Set fileNoCapsNoHyphen to file name with no caps or -
-
-		fileClosestAttempts := []string{fileNoCaps, fileNoHyphen, fileNoCapsNoHyphen} // Set fileClosestAttempts to an array of the closest attempts strings
-
-		for _, fileAttemptName := range fileClosestAttempts {
-			_, fileAttemptReadError := ioutil.ReadFile(directory + fileAttemptName) // Attempt to read this file
-
-			if fileAttemptReadError == nil { // If we successfully found a match
-				closestFile = fileAttemptName // Set closest file to this attempt name
-				break
-			}
-		}
-
-		if closestFile == "" { // If no matches were found
-			closestFileError = errors.New("No match for " + directory + file + " found.")
-		}
-	} else { // If there was no read error for the file, meaning the closest file is the file itself
-		closestFile = file // Set to original file provided
-	}
-
-	return directory + closestFile, closestFileError
-}
-
 // GetFiles will get all the files from a directory.
-func GetFiles(path string) ([]string, error) {
+func GetFiles(path string, recursive bool) ([]string, error) {
 	var files []string      // Define files as a []string
 	var getFilesError error // Define getFilesError as an error
 
-	if IsDir(path) { // If path is a directory
-		var directory *os.File
-		directory, _ = os.Open(path)
+	if directory, openErr := os.Open(path); openErr == nil {
 		directoryContents, directoryReadError := directory.Readdir(-1)
 
 		if directoryReadError == nil { // If there was no issue reading the directory contents
 			for _, fileInfoStruct := range directoryContents { // For each FileInfo struct in directoryContents
-				if !fileInfoStruct.IsDir() { // If the FileInfo indicates the object is not a directory
-					files = append(files, path+"/"+fileInfoStruct.Name()) // Add to files the file's name
+				name := fileInfoStruct.Name()
+
+				if recursive && fileInfoStruct.IsDir() { // If the FileInfo indicates the object is a directory and we're doing recursive file fetching
+					additionalFiles, _ := GetFiles(path + Separator + name, true)
+					files = append(files, additionalFiles...)
+				} else if !fileInfoStruct.IsDir() { // FileInfo is not a directory
+					files = append(files, path+ Separator + name) // Add to files the file's name
 				}
 			}
 		} else { // If there was ano issue reading the directory content
@@ -161,7 +130,7 @@ func GetFilesContains(path, substring string) ([]string, error) {
 	var getFilesError error           // Define getFilesError as an error
 	var allDirectoryContents []string // Define allDirectoryContents as the contents returned (if any) from GetFiles
 
-	allDirectoryContents, getFilesError = GetFiles(path) // Get all the files from the path
+	allDirectoryContents, getFilesError = GetFiles(path, false) // Get all the files from the path
 
 	if getFilesError == nil { // If there was no issue getting the directory contents
 		for _, fileName := range allDirectoryContents { // For each file name in directory contents
