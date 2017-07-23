@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"os"
 	"strconv"
+	"strings"
 )
 
 // GlobalFileMode is a file mode we'll use for global IO operations.
@@ -18,7 +19,7 @@ var NonGlobalFileMode os.FileMode
 
 func init() {
 	GlobalFileMode = 0777 // Set to global read/write/executable
-	Separator = strconv.QuoteRune(os.PathSeparator)
+	Separator = strings.Replace(strconv.QuoteRune(os.PathSeparator), "'", "", -1)
 	NonGlobalFileMode = 0744 // Only read/write/executable by owner, readable by group and others
 }
 

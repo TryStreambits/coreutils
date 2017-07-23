@@ -179,7 +179,7 @@ func WriteOrUpdateFile(file string, fileContent []byte, sourceFileMode os.FileMo
 		}
 	}
 
-	writeErr := ioutil.WriteFile(writeDirectory+fileName, fileContent, sourceFileMode)
+	writeErr := ioutil.WriteFile(writeDirectory+Separator+fileName, fileContent, sourceFileMode)
 
 	if writeErr != nil {
 		writeErr = errors.New("Failed to write " + fileName + " in directory " + writeDirectory)
