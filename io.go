@@ -172,7 +172,7 @@ func WriteOrUpdateFile(file string, fileContent []byte, sourceFileMode os.FileMo
 	if file == fileName { // If we did not specify a directory to write to
 		writeDirectory = currentDirectory // Set to the current directory
 	} else {
-		writeDirectory = AbsPath(file)
+		writeDirectory = AbsPath(filepath.Dir(file))
 	}
 
 	if currentDirectory != writeDirectory { // If the currentDirectory is not the same directory as the writeDirectory
