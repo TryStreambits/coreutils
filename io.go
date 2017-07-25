@@ -11,26 +11,28 @@ import (
 
 // AbsPath get the absolute directory path, cleaning out any file names, home directory references, etc.
 func AbsPath(path string) string {
-	user, userGetErr := user.Current()
+	if !filepath.IsAbs(path) { // If the path provided isn't already absolute
+		user, userGetErr := user.Current()
 
-	if userGetErr == nil { // If we didn't fail getting the current user
-		path = strings.Replace(path, "~", user.HomeDir+Separator, -1) // Replace any home directory reference
-	}
+		if userGetErr == nil { // If we didn't fail getting the current user
+			path = strings.Replace(path, "~", user.HomeDir+Separator, -1) // Replace any home directory reference
+		}
 
-	path, _ = filepath.Abs(path) // Get the absolute path of path
+		path, _ = filepath.Abs(path) // Get the absolute path of path
 
-	var stripLastElement bool
+		var stripLastElement bool
 
-	if file, openErr := os.Open(path); openErr == nil { // Attempt to open the path, to validate if it is a file or directory
-		stat, statErr := file.Stat()
-		stripLastElement = (statErr == nil) && !stat.IsDir() // Sets stripLastElement to true if stat.IsDir is not true
-	} else { // If we failed to open the directory or file
-		lastElement := filepath.Base(path)
-		stripLastElement = filepath.Ext(lastElement) != "" // If lastElement is either a dotfile or has an extension, assume it is a file
-	}
+		if file, openErr := os.Open(path); openErr == nil { // Attempt to open the path, to validate if it is a file or directory
+			stat, statErr := file.Stat()
+			stripLastElement = (statErr == nil) && !stat.IsDir() // Sets stripLastElement to true if stat.IsDir is not true
+		} else { // If we failed to open the directory or file
+			lastElement := filepath.Base(path)
+			stripLastElement = filepath.Ext(lastElement) != "" // If lastElement is either a dotfile or has an extension, assume it is a file
+		}
 
-	if stripLastElement {
-		path = filepath.Dir(path) + Separator // Strip out the last element and add the separator
+		if stripLastElement {
+			path = filepath.Dir(path) + Separator // Strip out the last element and add the separator
+		}
 	}
 
 	return path
