@@ -38,20 +38,29 @@ func AbsPath(path string) string {
 	return path
 }
 
-// CopyDirectory will copy a directory, sub-directories, and files
+// CopyDirectory will the directory specified and its contents into the destination directory
 func CopyDirectory(sourceDirectory, destinationDirectory string) error {
+	if !IsDir(sourceDirectory) { // If this isn't a source directory
+		return errors.New(sourceDirectory + " is not a directory.")
+	}
+
 	var copyError error
+	currentDirectory, _ := os.Getwd()            // Get the working directory
+	currentDirectory = AbsPath(currentDirectory) // Get the absolute path of the current working directory
 
-	if IsDir(sourceDirectory) { // If sourceDirectory is a valid directory
-		os.MkdirAll(destinationDirectory, NonGlobalFileMode)                     // Make all the needed directories to destinationDirectory
-		sourceDirectoryFile, _ := os.Open(sourceDirectory)                       // Get the source directory "file" struct
-		directoryContents, directoryReadError := sourceDirectoryFile.Readdir(-1) // Read the directory contents
+	os.MkdirAll(destinationDirectory, NonGlobalFileMode) // Ensure destinationDirectory exists
 
-		if directoryReadError == nil { /// If there was no read error on the directory
-			if len(directoryContents) != 0 { // If there is content
+	finalSourceDir := filepath.Base(sourceDirectory)                              // Determine what our final source directory is. For instance, we should only copy child from test/parent/child
+	parentOfFinalSourceDir := strings.TrimSuffix(sourceDirectory, finalSourceDir) // Get the parent directories we need to change to. Ex: test/parent
+
+	os.Chdir(parentOfFinalSourceDir)
+
+	if sourceDirectoryFile, sourceDirOpenErr := os.Open(finalSourceDir); sourceDirOpenErr == nil { // If we did not fail to open finalSourceDir
+		if directoryContents, directoryReadError := sourceDirectoryFile.Readdir(-1); directoryReadError == nil { // Read the directory contents
+			if len(directoryContents) != 0 { // If the directory has contents
 				for _, contentItemFileInfo := range directoryContents { // For each FileInfo struct in directoryContents
 					contentItemName := contentItemFileInfo.Name() // Get the name of the item
-					sourceItemPath := sourceDirectory + "/" + contentItemName
+					sourceItemPath := finalSourceDir + "/" + contentItemName
 					destinationItemPath := destinationDirectory + "/" + contentItemName
 
 					if contentItemFileInfo.IsDir() { // If this is a directory
@@ -64,9 +73,11 @@ func CopyDirectory(sourceDirectory, destinationDirectory string) error {
 		} else { // If there was a read error on the directory
 			copyError = errors.New("Unable to read: " + sourceDirectory)
 		}
-	} else { // If sourceDirectory is not a valid directory
-		copyError = errors.New(sourceDirectory + " is not a valid directory.")
+	} else {
+		copyError = errors.New("Unsable to open: " + sourceDirectory)
 	}
+
+	os.Chdir(currentDirectory)
 
 	return copyError
 }
@@ -110,10 +121,10 @@ func GetFiles(path string, recursive bool) ([]string, error) {
 				name := fileInfoStruct.Name()
 
 				if recursive && fileInfoStruct.IsDir() { // If the FileInfo indicates the object is a directory and we're doing recursive file fetching
-					additionalFiles, _ := GetFiles(path + Separator + name, true)
+					additionalFiles, _ := GetFiles(path+Separator+name, true)
 					files = append(files, additionalFiles...)
 				} else if !fileInfoStruct.IsDir() { // FileInfo is not a directory
-					files = append(files, path+ Separator + name) // Add to files the file's name
+					files = append(files, path+Separator+name) // Add to files the file's name
 				}
 			}
 		} else { // If there was ano issue reading the directory content
