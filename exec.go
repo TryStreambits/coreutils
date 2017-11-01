@@ -16,7 +16,7 @@ func ExecCommand(command string, args []string, redirect bool) string {
 		} else {
 			runner.Stdout = os.Stdout
 			runner.Stderr = os.Stderr
-			runner.Wait()
+			runner.Run()
 		}
 
 		return string(output[:])
