@@ -4,22 +4,16 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"os"
-	"strconv"
-	"strings"
 )
 
 // GlobalFileMode is a file mode we'll use for global IO operations.
 var GlobalFileMode os.FileMode
-
-// Separator is the file system path separator
-var Separator string
 
 // NonGlobalFileMode is the file mode we'll use for non-global IO operations.
 var NonGlobalFileMode os.FileMode
 
 func init() {
 	GlobalFileMode = 0777 // Set to global read/write/executable
-	Separator = strings.Replace(strconv.QuoteRune(os.PathSeparator), "'", "", -1)
 	NonGlobalFileMode = 0744 // Only read/write/executable by owner, readable by group and others
 }
 

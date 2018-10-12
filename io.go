@@ -15,7 +15,7 @@ func AbsPath(path string) string {
 		user, userGetErr := user.Current()
 
 		if userGetErr == nil { // If we didn't fail getting the current user
-			path = strings.Replace(path, "~", user.HomeDir+Separator, -1) // Replace any home directory reference
+			path = strings.Replace(path, "~", user.HomeDir, -1) // Replace any home directory reference
 		}
 
 		path, _ = filepath.Abs(path) // Get the absolute path of path
@@ -31,7 +31,7 @@ func AbsPath(path string) string {
 		}
 
 		if stripLastElement {
-			path = filepath.Dir(path) + Separator // Strip out the last element and add the separator
+			path = filepath.Dir(path) // Strip out the last element
 		}
 	}
 
@@ -121,10 +121,10 @@ func GetFiles(path string, recursive bool) ([]string, error) {
 				name := fileInfoStruct.Name()
 
 				if recursive && fileInfoStruct.IsDir() { // If the FileInfo indicates the object is a directory and we're doing recursive file fetching
-					additionalFiles, _ := GetFiles(path+Separator+name, true)
+					additionalFiles, _ := GetFiles(filepath.Join(path,name), true)
 					files = append(files, additionalFiles...)
 				} else if !fileInfoStruct.IsDir() { // FileInfo is not a directory
-					files = append(files, path+Separator+name) // Add to files the file's name
+					files = append(files, filepath.Join(path, name)) // Add to files the file's name
 				}
 			}
 		} else { // If there was ano issue reading the directory content
@@ -211,10 +211,10 @@ func WriteOrUpdateFile(file string, fileContent []byte, sourceFileMode os.FileMo
 		}
 	}
 
-	writeErr := ioutil.WriteFile(writeDirectory+Separator+fileName, fileContent, sourceFileMode)
+	writeErr := ioutil.WriteFile(filepath.Join(writeDirectory,fileName), fileContent, sourceFileMode)
 
 	if writeErr != nil {
-		writeErr = errors.New("Failed to write " + fileName + " in directory " + writeDirectory + "\n" + writeError.Error())
+		writeErr = errors.New("Failed to write " + fileName + " in directory " + writeDirectory + "\n" + writeErr.Error())
 	}
 
 	return writeErr

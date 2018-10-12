@@ -22,11 +22,6 @@ var GlobalFileMode os.FileMode
 GlobalFileMode is a file mode we'll use for global IO operations.
 
 ```go
-var Separator string
-```
-Separator is the file system path separator
-
-```go
 var NonGlobalFileMode os.FileMode
 ```
 NonGlobalFileMode is the file mode we'll use for non-global IO operations.
