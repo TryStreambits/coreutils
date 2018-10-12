@@ -156,6 +156,25 @@ func GetFilesContains(path, substring string) ([]string, error) {
 	return files, getFilesError
 }
 
+// GetFilesContainsRecursive will return any files from a directory containing a particular string, recursively
+func GetFilesContainsRecursive(path, substring string) ([]string, error) {
+	var files []string                // Define files as the parsed files
+	var getFilesError error           // Define getFilesError as an error
+	var allDirectoryContents []string // Define allDirectoryContents as the contents returned (if any) from GetFiles
+
+	allDirectoryContents, getFilesError = GetFiles(path, true) // Get all the files from the path
+
+	if getFilesError == nil { // If there was no issue getting the directory contents
+		for _, fileName := range allDirectoryContents { // For each file name in directory contents
+			if strings.Contains(filepath.Base(fileName), substring) { // If the file name contains our substring
+				files = append(files, fileName) // Append to files
+			}
+		}
+	}
+
+	return files, getFilesError
+}
+
 // IsDir checks if the path provided is a directory or not
 func IsDir(path string) bool {
 	var isDir bool
@@ -195,7 +214,7 @@ func WriteOrUpdateFile(file string, fileContent []byte, sourceFileMode os.FileMo
 	writeErr := ioutil.WriteFile(writeDirectory+Separator+fileName, fileContent, sourceFileMode)
 
 	if writeErr != nil {
-		writeErr = errors.New("Failed to write " + fileName + " in directory " + writeDirectory)
+		writeErr = errors.New("Failed to write " + fileName + " in directory " + writeDirectory + "\n" + writeError.Error())
 	}
 
 	return writeErr
