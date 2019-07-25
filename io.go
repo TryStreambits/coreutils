@@ -1,6 +1,7 @@
 package coreutils
 
 import (
+	"fmt"
 	"errors"
 	"io/ioutil"
 	"os"
@@ -207,14 +208,14 @@ func WriteOrUpdateFile(file string, fileContent []byte, sourceFileMode os.FileMo
 
 	if currentDirectory != writeDirectory { // If the currentDirectory is not the same directory as the writeDirectory
 		if createDirsErr := os.MkdirAll(writeDirectory, sourceFileMode); createDirsErr != nil { // If we failed to make all the directories needed
-			return errors.New("Failed to create the path leading up to " + fileName + ": " + writeDirectory)
+			return errors.New(fmt.Sprintf("Failed to create the path leading up to %s: %s", fileName + ": ", writeDirectory))
 		}
 	}
 
 	writeErr := ioutil.WriteFile(filepath.Join(writeDirectory,fileName), fileContent, sourceFileMode)
 
 	if writeErr != nil {
-		writeErr = errors.New("Failed to write " + fileName + " in directory " + writeDirectory + "\n" + writeErr.Error())
+		writeErr = errors.New(fmt.Sprintf("Failed to write %s in directory %s: %s", fileName , writeDirectory, writeErr.Error()))
 	}
 
 	return writeErr
